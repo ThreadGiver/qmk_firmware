@@ -1,0 +1,426 @@
+#include <stdint.h>
+#include "annepro2.h"
+#include "qmk_ap2_led.h"
+#include "config.h"
+
+enum anne_pro_layers
+{
+  _BASE_LAYER,
+  _QWERTY,
+  _QWERTYFN,
+  _FN1_LAYER,
+  _FN2_LAYER,
+  _FN3_LAYER,
+};
+
+void tapHold(record, tap_key, hold_key)
+{
+  if (record->event.pressed)
+  {
+    if (record->tap.count)
+    {
+      tap_code16(tap_key); // Intercept tap function to send
+    }
+    else
+    {
+      tap_code16(hold_key); // Intercept hold function to send
+    }
+  }
+}
+
+const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+    [_BASE_LAYER] = KEYMAP(/* Base */
+                           LT(_FN3_LAYER, KC_ESC), LT(0, KC_1), LT(0, KC_2), LT(0, KC_3), LT(0, KC_4), LT(0, KC_5), LT(0, KC_6), LT(0, KC_7), LT(0, KC_8), LT(0, KC_9), LT(0, KC_0), LT(0, KC_LBRC), LT(0, KC_RBRC), KC_BSPC,
+                           LT(_FN2_LAYER, KC_TAB), KC_QUOT, KC_COMM, KC_DOT, KC_P, KC_Y, KC_F, KC_G, KC_C, KC_R, KC_L, KC_SLSH, KC_EQL, KC_BSLS,
+                           LT(_FN1_LAYER, KC_CAPS), LGUI_T(KC_A), LALT_T(KC_O), LSFT_T(KC_E), LCTL_T(KC_U), KC_I, KC_D, RCTL_T(KC_H), RSFT_T(KC_T), RALT_T(KC_N), RGUI_T(KC_S), KC_MINS, KC_ENT,
+                           LSFT_T(KC_MPLY), KC_SCLN, KC_Q, KC_J, KC_K, KC_X, KC_B, KC_M, KC_W, KC_V, KC_Z, RSFT_T(KC_UP),
+                           LCTL_T(KC_MPRV), KC_LGUI, LALT_T(KC_MNXT), LT(_FN1_LAYER, KC_SPC), KC_RALT, LT(_FN1_LAYER, KC_LEFT), LT(_FN2_LAYER, KC_DOWN), RCTL_T(KC_RGHT)),
+    [_QWERTY] = KEYMAP(/* Base */
+                       KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, KC_MINS, KC_EQL, KC_BSPC,
+                       KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_LBRC, KC_RBRC, KC_BSLS,
+                       LT(_FN1_LAYER, KC_CAPS), KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT, KC_ENT,
+                       KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_UP,
+                       KC_LCTL, KC_LGUI, KC_LALT, KC_SPC, KC_RALT, LT(_FN1_LAYER, KC_LEFT), LT(_FN2_LAYER, KC_DOWN), KC_RGHT),
+    [_QWERTYFN] = KEYMAP(/* Base */
+                         LT(_FN3_LAYER, KC_ESC), LT(1, KC_1), LT(1, KC_2), LT(1, KC_3), LT(1, KC_4), LT(1, KC_5), LT(1, KC_6), LT(1, KC_7), LT(1, KC_8), LT(1, KC_9), LT(1, KC_0), LT(1, KC_MINS), LT(1, KC_EQL), KC_TRNS,
+                         LT(_FN2_LAYER, KC_TAB), KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                         LT(_FN1_LAYER, KC_CAPS), KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
+    [_FN1_LAYER] = KEYMAP(/* Base */
+                          KC_GRV, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_TRNS,
+                          KC_TRNS, TG(_QWERTY), HYPR(KC_M), KC_TAB, C(S(KC_P)), KC_VOLU, KC_PGUP, KC_ENT, KC_UP, KC_MENU, KC_ESC, KC_TRNS, KC_TRNS, KC_TRNS,
+                          KC_TRNS, C(G(KC_LEFT)), C(G(KC_RGHT)), KC_CIRC, KC_GRV, KC_VOLD, KC_PGDN, KC_LEFT, KC_DOWN, KC_RIGHT, KC_BSPC, KC_DEL, KC_TRNS,
+                          KC_TRNS, KC_PSCR, TG(_QWERTYFN), KC_LBRACKET, KC_RBRACKET, KC_MUTE, KC_HOME, KC_END, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                          KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, MO(_FN2_LAYER), KC_TRNS),
+    [_FN2_LAYER] = KEYMAP(/* Base */
+                          KC_TRNS, KC_AP2_BT1, KC_AP2_BT2, KC_AP2_BT3, KC_AP2_BT4, KC_TRNS, KC_TRNS, KC_TRNS, KC_AP_LED_OFF, KC_AP_LED_ON, KC_AP_LED_NEXT_INTENSITY, KC_AP_LED_SPEED, KC_TRNS, A(KC_F4),
+                          MO(_FN2_LAYER), LCAG(KC_0), LCAG(KC_1), LCAG(KC_4), KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_SLEP,
+                          KC_TRNS, LCAG(KC_2), LCAG(KC_3), LCAG(KC_5), KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                          KC_TRNS, LCAG(KC_6), LCAG(KC_7), LCAG(KC_8), KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                          KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, MO(_FN1_LAYER), MO(_FN2_LAYER), KC_TRNS),
+    [_FN3_LAYER] = KEYMAP(/* Base */
+                          KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                          KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                          KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                          KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                          KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS)};
+const uint16_t keymaps_size = sizeof(keymaps);
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record)
+{
+  switch (keycode)
+  {
+  case LT(0, KC_1):
+    tapHold(record, KC_1, KC_F13);
+    // if (record->event.pressed) {
+    //   if (record->tap.count) {
+    //     tap_code16(KC_1); // Intercept tap function to send
+    //   } else {
+    //     tap_code16(KC_F13); // Intercept hold function to send
+    //   }
+    // }
+    // return false;
+  case LT(0, KC_2):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_2); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F14); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(0, KC_3):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_3); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F15); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(0, KC_4):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_4); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F16); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(0, KC_5):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_5); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F17); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(0, KC_6):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_6); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F18); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(0, KC_7):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_7); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F19); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(0, KC_8):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_8); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F20); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(0, KC_9):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_9); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F21); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(0, KC_0):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_0); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F22); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(0, KC_LBRC):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_LBRC); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F23); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(0, KC_RBRC):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_RBRC); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F24); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(1, KC_1):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_1); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F1); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(1, KC_2):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_2); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F2); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(1, KC_3):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_3); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F3); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(1, KC_4):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_4); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F4); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(1, KC_5):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_5); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F5); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(1, KC_6):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_6); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F6); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(1, KC_7):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_7); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F7); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(1, KC_8):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_8); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F8); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(1, KC_9):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_9); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F9); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(1, KC_0):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_0); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F10); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(1, KC_MINS):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_MINS); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F11); // Intercept hold function to send
+      }
+    }
+    return false;
+  case LT(1, KC_EQL):
+    if (record->event.pressed)
+    {
+      if (record->tap.count)
+      {
+        tap_code16(KC_EQL); // Intercept tap function to send
+      }
+      else
+      {
+        tap_code16(KC_F12); // Intercept hold function to send
+      }
+    }
+    return false;
+
+  case TG(_QWERTYFN):
+    if (record->event.pressed)
+    {
+      layer_invert(_QWERTYFN);
+      if (layer_state_is(_QWERTYFN))
+      {
+        tap_code16(HYPR(KC_S));
+      }
+      else
+      {
+        tap_code16(HYPR(KC_Z));
+      }
+    }
+    return false;
+  }
+  return true;
+}
+
+void matrix_init_user(void)
+{
+}
+
+void matrix_scan_user(void)
+{
+}
+
+// Code to run after initializing the keyboard
+void keyboard_post_init_user(void)
+{
+  // Here are two common functions that you can use. For more LED functions, refer to the file "qmk_ap2_led.h"
+
+  // annepro2-shine disables LEDs by default. Uncomment this function to enable them at startup.
+  // annepro2LedEnable();
+
+  // Additionally, it also chooses the first LED profile by default. Refer to the "profiles" array in main.c in
+  // annepro2-shine to see the order. Replace "i" with the index of your preferred profile. (i.e the RED profile is index 0)
+  annepro2LedSetProfile(8);
+}
+
+layer_state_t layer_state_set_user(layer_state_t layer)
+{
+  return layer;
+}
